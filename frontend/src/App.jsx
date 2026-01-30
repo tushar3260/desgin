@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import ClubDashboard from "./pages/ClubDashboard";
 // Existing pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -38,6 +39,9 @@ function App() {
         <Route path="/club-login" element={<ClubLogin />} />
         <Route path="/club-signup" element={<ClubSignup />} />
         <Route path="/post-event" element={<PostEvent />} />
+        <Route path="/club-dashboard" element={<ClubDashboard />} />
+
+
       </Routes>
       <EventAIChatbot/>
     </BrowserRouter>
