@@ -1,175 +1,199 @@
 import React from 'react';
-import { ArrowUpRight, Code, Cpu, Globe, Zap, Calendar, MapPin, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Zap, Users, Building2, Calendar, MapPin, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Landing = () => {
   return (
-    <div className="min-h-screen bg-[#F4F4F2] text-[#1A1A1A] font-sans selection:bg-[#D9F99D] selection:text-black">
-      
-      {/* --- FLOATING NAVBAR --- */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl bg-white/80 backdrop-blur-md border border-gray-200 p-2 rounded-full flex justify-between items-center z-50 shadow-sm">
-        <div className="flex items-center gap-2 px-4">
-          <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-             <Zap className="text-[#D9F99D] w-5 h-5 fill-current" />
-          </div>
-          <span className="font-bold text-lg tracking-tight">HackSprint</span>
-        </div>
+    <div className="min-h-screen bg-[#F4F4F2] text-[#1A1A1A] font-sans selection:bg-[#D9F99D] selection:text-black overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-3 h-3 rounded-full"
+            style={{
+              background: i % 3 === 0 ? '#D9F99D' : i % 3 === 1 ? '#000' : '#fff',
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 20 - 10, 0],
+              rotate: [0, 360, 720],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2
+            }}
+          />
+        ))}
         
-        <div className="hidden md:flex gap-1 bg-[#F4F4F2] p-1 rounded-full">
-          {['Home', 'Schedule', 'Tracks', 'Sponsors'].map((item) => (
-            <a key={item} href="#" className="px-5 py-2 rounded-full text-sm font-medium hover:bg-white hover:shadow-sm transition-all text-gray-600 hover:text-black">
-              {item}
-            </a>
-          ))}
-        </div>
-
-        <button className="bg-black text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[#D9F99D] hover:text-black transition-colors flex items-center gap-2">
-          Register <ArrowUpRight className="w-4 h-4" />
-        </button>
-      </nav>
-
-      {/* --- HERO SECTION --- */}
-      <section className="pt-40 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
-        <div className="flex flex-col items-center text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium mb-8 shadow-sm animate-fade-in-up">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            Registrations closing in 24h
-          </div>
-
-          {/* Main Heading */}
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] mb-8 uppercase">
-            Code <br className="md:hidden" />
-            <span className="text-gray-300">The</span> Future
-          </h1>
-
-          <p className="text-xl text-gray-600 max-w-2xl mb-10 font-medium">
-            India's largest student hackathon. 36 hours of building, networking, and innovation. Join 5000+ developers.
-          </p>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-            <button className="px-8 py-4 bg-black text-[#D9F99D] rounded-full text-lg font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2">
-              Start Hacking <ArrowUpRight className="w-5 h-5" />
-            </button>
-            <button className="px-8 py-4 bg-white border border-gray-200 text-black rounded-full text-lg font-bold hover:bg-gray-50 transition-colors">
-              View Rulebook
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* --- SCROLLING MARQUEE --- */}
-      <div className="w-full bg-[#D9F99D] border-y border-black overflow-hidden py-4 rotate-[-1deg] scale-105 mb-20">
-        <div className="whitespace-nowrap animate-marquee inline-block">
-          {[...Array(10)].map((_, i) => (
-            <span key={i} className="text-4xl font-black uppercase mx-8 text-black">
-              • Hack To Win • Build The Future • No Sleep Just Code
-            </span>
-          ))}
-        </div>
+        <motion.div
+          className="absolute bottom-0 left-1/4 w-64 h-64 bg-[#D9F99D] rounded-full blur-3xl opacity-20"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.3, 0.2]
+          }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
       </div>
 
-      {/* --- BENTO GRID SECTION --- */}
-      <section className="px-4 md:px-8 max-w-7xl mx-auto mb-24">
-        <div className="flex justify-between items-end mb-10">
-          <h2 className="text-5xl font-black tracking-tighter uppercase">Event <span className="text-gray-400">Details</span></h2>
-          <p className="hidden md:block text-gray-500 font-medium">Explore what's happening</p>
-        </div>
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Hero Section */}
+        <section className="flex-1 flex items-center justify-center px-4 md:px-8 pt-20 pb-12">
+          <div className="max-w-4xl w-full">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              {/* Logo */}
+              <motion.div 
+                className="inline-flex items-center gap-3 mb-6"
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring" }}
+              >
+                <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center">
+                  <Zap className="text-[#D9F99D] w-9 h-9 fill-current" />
+                </div>
+                <span className="font-black text-6xl md:text-7xl tracking-tight">EventsHUB</span>
+              </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px]">
-          
-          {/* Card 1: Large Video/Image Placeholder */}
-          <div className="md:col-span-2 md:row-span-2 rounded-[2rem] bg-black text-white p-8 relative overflow-hidden group">
-            <img 
-              src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop" 
-              alt="Hackathon crowd" 
-              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500"
-            />
-            <div className="relative z-10 h-full flex flex-col justify-between">
-              <div className="flex justify-between items-start">
-                 <span className="bg-[#D9F99D] text-black px-3 py-1 rounded-full text-xs font-bold uppercase">Featured</span>
-                 <ArrowUpRight className="w-8 h-8 text-white group-hover:rotate-45 transition-transform" />
-              </div>
-              <div>
-                <h3 className="text-4xl font-bold mb-2">The Grand Finale</h3>
-                <p className="text-gray-300">Live judging stream on YouTube.</p>
-              </div>
+              {/* Tagline */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="mb-8"
+              >
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium mb-6 shadow-sm">
+                  <Sparkles className="w-4 h-4 text-[#D9F99D]" />
+                  <span>Where Events Come Alive</span>
+                </div>
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-tight mb-6 uppercase"
+              >
+                Discover <br className="md:hidden" />
+                <span className="text-gray-300">Amazing</span> Events
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto mb-12 font-medium"
+              >
+                Join thousands of event enthusiasts and organizers creating unforgettable experiences
+              </motion.p>
+
+              {/* CTA Cards */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
+                className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto"
+              >
+                {/* User Card */}
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  className="bg-white border-2 border-black rounded-3xl p-8 text-left shadow-lg hover:shadow-2xl transition-all"
+                >
+                  <div className="w-14 h-14 bg-[#D9F99D] rounded-full flex items-center justify-center mb-4">
+                    <Users className="w-8 h-8 text-black" />
+                  </div>
+                  <h3 className="text-2xl font-black mb-2">I'm an Attendee</h3>
+                  <p className="text-gray-600 mb-6 font-medium">
+                    Discover and join exciting events in your area
+                  </p>
+                  <div className="space-y-3">
+                    <Link
+                      to="/user-login"
+                      data-testid="landing-user-login-link"
+                      className="block w-full bg-black text-[#D9F99D] py-3 rounded-xl font-bold text-center hover:bg-gray-900 transition-colors"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/user-signup"
+                      data-testid="landing-user-signup-link"
+                      className="block w-full border-2 border-black text-black py-3 rounded-xl font-bold text-center hover:bg-gray-50 transition-colors"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                </motion.div>
+
+                {/* Club Card */}
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  className="bg-black text-white border-2 border-black rounded-3xl p-8 text-left shadow-lg hover:shadow-2xl transition-all"
+                >
+                  <div className="w-14 h-14 bg-[#D9F99D] rounded-full flex items-center justify-center mb-4">
+                    <Building2 className="w-8 h-8 text-black" />
+                  </div>
+                  <h3 className="text-2xl font-black mb-2">I'm an Organizer</h3>
+                  <p className="text-gray-300 mb-6 font-medium">
+                    Create and manage unforgettable events
+                  </p>
+                  <div className="space-y-3">
+                    <Link
+                      to="/club-login"
+                      data-testid="landing-club-login-link"
+                      className="block w-full bg-[#D9F99D] text-black py-3 rounded-xl font-bold text-center hover:bg-[#c9e98d] transition-colors"
+                    >
+                      Club Login
+                    </Link>
+                    <Link
+                      to="/club-signup"
+                      data-testid="landing-club-signup-link"
+                      className="block w-full border-2 border-[#D9F99D] text-[#D9F99D] py-3 rounded-xl font-bold text-center hover:bg-[#D9F99D] hover:text-black transition-colors"
+                    >
+                      Register Club
+                    </Link>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="py-12 px-4"
+        >
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center">
+              <Calendar className="w-10 h-10 mx-auto mb-3 text-black" />
+              <h4 className="font-bold text-lg mb-2">Diverse Events</h4>
+              <p className="text-gray-600 text-sm">Concerts, workshops, conferences & more</p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center">
+              <MapPin className="w-10 h-10 mx-auto mb-3 text-black" />
+              <h4 className="font-bold text-lg mb-2">Local & Global</h4>
+              <p className="text-gray-600 text-sm">Events from your neighborhood to worldwide</p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center">
+              <Zap className="w-10 h-10 mx-auto mb-3 text-black" />
+              <h4 className="font-bold text-lg mb-2">Easy Management</h4>
+              <p className="text-gray-600 text-sm">Powerful tools for organizers</p>
             </div>
           </div>
-
-          {/* Card 2: Date */}
-          <div className="bg-white rounded-[2rem] p-6 border border-gray-200 flex flex-col justify-between hover:shadow-lg transition-shadow">
-             <Calendar className="w-10 h-10 text-gray-400" />
-             <div>
-                <p className="text-gray-500 text-sm font-bold uppercase mb-1">Date</p>
-                <p className="text-2xl font-bold">Oct 24-26</p>
-             </div>
-          </div>
-
-          {/* Card 3: Location */}
-          <div className="bg-[#D9F99D] rounded-[2rem] p-6 border border-black flex flex-col justify-between hover:scale-[1.02] transition-transform">
-             <MapPin className="w-10 h-10 text-black" />
-             <div>
-                <p className="text-black/70 text-sm font-bold uppercase mb-1">Venue</p>
-                <p className="text-2xl font-bold text-black">Main Auditorium</p>
-             </div>
-          </div>
-
-          {/* Card 4: Tracks (Tall) */}
-          <div className="md:row-span-2 bg-white rounded-[2rem] p-6 border border-gray-200 flex flex-col hover:shadow-lg transition-shadow">
-             <div className="mb-auto">
-               <h3 className="text-2xl font-bold mb-6">Tracks</h3>
-               <div className="space-y-4">
-                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                   <div className="bg-blue-100 p-2 rounded-lg"><Code className="w-5 h-5 text-blue-600"/></div>
-                   <span className="font-semibold">Web3</span>
-                 </div>
-                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                   <div className="bg-purple-100 p-2 rounded-lg"><Cpu className="w-5 h-5 text-purple-600"/></div>
-                   <span className="font-semibold">AI/ML</span>
-                 </div>
-                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                   <div className="bg-orange-100 p-2 rounded-lg"><Globe className="w-5 h-5 text-orange-600"/></div>
-                   <span className="font-semibold">Open Innovation</span>
-                 </div>
-               </div>
-             </div>
-             <button className="w-full py-3 mt-4 border border-gray-300 rounded-xl font-bold hover:bg-black hover:text-white transition-colors">View All</button>
-          </div>
-
-          {/* Card 5: Prize Pool */}
-          <div className="md:col-span-2 bg-black text-white rounded-[2rem] p-8 flex items-center justify-between overflow-hidden relative">
-            <div className="relative z-10">
-               <p className="text-gray-400 font-bold uppercase tracking-widest mb-2">Total Prize Pool</p>
-               <h3 className="text-5xl md:text-6xl font-black text-[#D9F99D]">₹5,00,000</h3>
-            </div>
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-20">
-               <Zap className="w-48 h-48" />
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* --- FOOTER CTA --- */}
-      <section className="bg-black text-white py-24 px-4 text-center rounded-t-[3rem]">
-        <h2 className="text-5xl md:text-7xl font-black mb-8">READY TO BUILD?</h2>
-        <button className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-black transition-all duration-200 bg-[#D9F99D] font-pj rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
-           Register Team Now
-           <div className="absolute -inset-3 rounded-xl bg-[#D9F99D] opacity-20 group-hover:opacity-40 blur-lg transition duration-200" />
-        </button>
-      </section>
-
-      {/* --- GLOBAL STYLES FOR ANIMATION --- */}
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
-        }
-      `}</style>
+        </motion.section>
+      </div>
     </div>
   );
 };
