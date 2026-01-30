@@ -11,6 +11,8 @@ import ClubLogin from "./pages/ClubLogin";
 import ClubSignup from "./pages/ClubSignup";
 import UserLogin from "./pages/UserLogin";
 import UserSignup from "./pages/UserSignup";
+import ForgotPasswordFlow from "./pages/ForgotPassword";
+import PostEvent from "./pages/PostEvent";
 
 function App() {
   return (
@@ -25,10 +27,12 @@ function App() {
         <Route path="/user-login" element={<UserLogin />} />
         <Route path="/user-signup" element={<UserSignup />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/forgot-password" element={<ForgotPasswordFlow />} />
 
         {/* Club Routes */}
         <Route path="/club-login" element={<ClubLogin />} />
         <Route path="/club-signup" element={<ClubSignup />} />
+        <Route path="/post-event" element={<PostEvent />} />
       </Routes>
     </BrowserRouter>
   );
