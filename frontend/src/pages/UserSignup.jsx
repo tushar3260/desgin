@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Mail, Lock, User, Zap, Heart, Ticket, CheckCircle, XCircle, PartyPopper } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import api from '../api';
 
 const UserSignup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -65,7 +67,7 @@ const UserSignup = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -97,16 +99,30 @@ const UserSignup = () => {
       newErrors.agreeToTerms = 'You must agree to the terms and conditions';
     }
 
-    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
-    if (Object.keys(newErrors).length === 0) {
-      setIsSubmitting(true);
-      // Simulate API call
+    setIsSubmitting(true);
+    try {
+      await api.post("/users/register", {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password
+      });
+
+      setIsSubmitting(false);
+      setShowSuccess(true);
+
       setTimeout(() => {
-        console.log('User Signup:', formData);
-        setIsSubmitting(false);
-        setShowSuccess(true);
-      }, 1500);
+        navigate("/user-login");
+      }, 2000);
+
+    } catch (error) {
+      console.error(error);
+      setIsSubmitting(false);
+      alert(error.response?.data?.message || "Registration failed");
     }
   };
 
@@ -176,9 +192,8 @@ const UserSignup = () => {
 
   return (
     <div className="min-h-screen bg-[#F4F4F2] relative overflow-hidden font-sans">
-      {/* Animated Background - Vibrant Event Theme */}
+      {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Floating Tickets */}
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={`ticket-${i}`}
@@ -202,7 +217,6 @@ const UserSignup = () => {
           </motion.div>
         ))}
 
-        {/* Hearts */}
         {[...Array(8)].map((_, i) => (
           <motion.div
             key={`heart-${i}`}
@@ -226,7 +240,6 @@ const UserSignup = () => {
           </motion.div>
         ))}
 
-        {/* Colorful Blobs */}
         <motion.div
           className="absolute top-10 right-10 w-64 h-64 bg-[#D9F99D] rounded-full blur-3xl opacity-30"
           animate={{
@@ -247,7 +260,6 @@ const UserSignup = () => {
         />
       </div>
 
-      {/* Main Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
         <motion.div
           className="w-full max-w-lg"
@@ -255,7 +267,6 @@ const UserSignup = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {/* Logo/Brand */}
           <motion.div 
             className="text-center mb-8"
             initial={{ scale: 0.9, opacity: 0 }}
@@ -271,7 +282,6 @@ const UserSignup = () => {
             <p className="text-gray-600 font-medium">Start Your Event Journey</p>
           </motion.div>
 
-          {/* Form Card */}
           <motion.div
             className="bg-white/90 backdrop-blur-sm border-2 border-black rounded-3xl p-8 shadow-xl"
             initial={{ scale: 0.95 }}
@@ -279,11 +289,8 @@ const UserSignup = () => {
             transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
           >
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Full Name */}
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
-                  Full Name
-                </label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
@@ -297,22 +304,12 @@ const UserSignup = () => {
                   />
                 </div>
                 {errors.fullName && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1 font-medium"
-                    data-testid="user-signup-name-error"
-                  >
-                    {errors.fullName}
-                  </motion.p>
+                  <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-sm mt-1 font-medium">{errors.fullName}</motion.p>
                 )}
               </div>
 
-              {/* Email */}
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
-                  Email Address
-                </label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
@@ -326,22 +323,12 @@ const UserSignup = () => {
                   />
                 </div>
                 {errors.email && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1 font-medium"
-                    data-testid="user-signup-email-error"
-                  >
-                    {errors.email}
-                  </motion.p>
+                  <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-sm mt-1 font-medium">{errors.email}</motion.p>
                 )}
               </div>
 
-              {/* Password */}
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
-                  Password
-                </label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Password</label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
@@ -355,39 +342,26 @@ const UserSignup = () => {
                   />
                 </div>
                 {errors.password && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1 font-medium"
-                    data-testid="user-signup-password-error"
-                  >
-                    {errors.password}
-                  </motion.p>
+                  <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-sm mt-1 font-medium">{errors.password}</motion.p>
                 )}
                 {formData.password && (
-                  <div className="mt-2" data-testid="user-signup-password-strength">
+                  <div className="mt-2">
                     <div className="flex items-center gap-2 mb-1">
                       <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                         <motion.div
                           className={`h-full ${passwordStrength.color}`}
                           initial={{ width: 0 }}
                           animate={{ width: `${passwordStrength.strength}%` }}
-                          transition={{ duration: 0.3 }}
                         />
                       </div>
-                      <span className={`text-xs font-bold ${passwordStrength.color.replace('bg-', 'text-')}`}>
-                        {passwordStrength.label}
-                      </span>
+                      <span className={`text-xs font-bold ${passwordStrength.color.replace('bg-', 'text-')}`}>{passwordStrength.label}</span>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Confirm Password */}
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
-                  Confirm Password
-                </label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Confirm Password</label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
@@ -410,101 +384,54 @@ const UserSignup = () => {
                   )}
                 </div>
                 {errors.confirmPassword && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1 font-medium"
-                    data-testid="user-signup-confirm-password-error"
-                  >
-                    {errors.confirmPassword}
-                  </motion.p>
+                  <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-sm mt-1 font-medium">{errors.confirmPassword}</motion.p>
                 )}
               </div>
 
-              {/* Terms & Conditions */}
               <div>
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     name="agreeToTerms"
-                    data-testid="user-signup-terms-checkbox"
                     checked={formData.agreeToTerms}
                     onChange={handleChange}
                     className="w-5 h-5 mt-0.5 rounded border-2 border-gray-300 text-black focus:ring-2 focus:ring-[#D9F99D] cursor-pointer"
                   />
                   <span className="text-sm text-gray-700">
-                    I agree to the{' '}
-                    <a href="#" className="font-bold text-black hover:text-gray-600">
-                      Terms and Conditions
-                    </a>{' '}
-                    and{' '}
-                    <a href="#" className="font-bold text-black hover:text-gray-600">
-                      Privacy Policy
-                    </a>
+                    I agree to the <a href="#" className="font-bold text-black">Terms</a> and <a href="#" className="font-bold text-black">Privacy Policy</a>
                   </span>
                 </label>
                 {errors.agreeToTerms && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1 font-medium"
-                    data-testid="user-signup-terms-error"
-                  >
-                    {errors.agreeToTerms}
-                  </motion.p>
+                  <p className="text-red-500 text-sm mt-1 font-medium">{errors.agreeToTerms}</p>
                 )}
               </div>
 
-              {/* Submit Button */}
               <motion.button
                 type="submit"
-                data-testid="user-signup-submit-button"
                 disabled={isSubmitting}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-black text-[#D9F99D] py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                className="w-full bg-black text-[#D9F99D] py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-gray-900 transition-colors disabled:opacity-50 shadow-lg"
               >
                 {isSubmitting ? (
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  >
+                  <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
                     <Zap className="w-5 h-5" />
                   </motion.div>
                 ) : (
-                  <>
-                    Join EventsHUB
-                    <ArrowRight className="w-5 h-5" />
-                  </>
+                  <>Join EventsHUB <ArrowRight className="w-5 h-5" /></>
                 )}
               </motion.button>
             </form>
 
-            {/* Login Link */}
             <div className="mt-6 text-center">
               <p className="text-gray-600 font-medium">
-                Already have an account?{' '}
-                <Link
-                  to="/user-login"
-                  data-testid="user-signup-login-link"
-                  className="text-black font-bold hover:text-gray-600 transition-colors"
-                >
-                  Login here
-                </Link>
+                Already have an account? <Link to="/user-login" className="text-black font-bold hover:text-gray-600">Login here</Link>
               </p>
             </div>
 
-            {/* Club Signup Link */}
-            <div className="mt-4 pt-6 border-t border-gray-200">
-              <p className="text-center text-sm text-gray-600">
-                Want to organize events?{' '}
-                <Link
-                  to="/club-signup"
-                  data-testid="user-signup-club-signup-link"
-                  className="text-black font-bold hover:text-gray-600 transition-colors"
-                >
-                  Register as Club
-                </Link>
+            <div className="mt-4 pt-6 border-t border-gray-200 text-center">
+              <p className="text-sm text-gray-600">
+                Want to organize events? <Link to="/club-signup" className="text-black font-bold hover:text-gray-600">Register as Club</Link>
               </p>
             </div>
           </motion.div>

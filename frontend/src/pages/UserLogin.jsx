@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Mail, Lock, Zap, Sparkles, Star, Music } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowRight, Mail, Lock, Zap, Sparkles, Star, Music, AlertCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import api from "../api"; // Import your API instance
 
 const UserLogin = () => {
+  const navigate = useNavigate(); // For navigation
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     rememberMe: false
   });
+  
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // General error state for API failures (like "Invalid Credentials")
+  const [apiError, setApiError] = useState(""); 
 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,7 +26,9 @@ const UserLogin = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const val = type === 'checkbox' ? checked : value;
+    
     setFormData(prev => ({ ...prev, [name]: val }));
+    setApiError(""); // Clear global error when user types
 
     // Real-time validation
     if (name === 'email' && value) {
@@ -39,10 +47,11 @@ const UserLogin = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
+    // Client-side Validation
     if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!validateEmail(formData.email)) {
@@ -51,19 +60,36 @@ const UserLogin = () => {
 
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
     }
 
     setErrors(newErrors);
 
+    // If validation passes, Call API
     if (Object.keys(newErrors).length === 0) {
       setIsSubmitting(true);
-      // Simulate API call
-      setTimeout(() => {
-        console.log('User Login:', formData);
+      setApiError("");
+
+      try {
+        // --- API CALL START ---
+        const res = await api.post("/users/login", {
+            email: formData.email,
+            password: formData.password
+        });
+
+        // Save Token
+        localStorage.setItem("token", res.data.token);
+        
+        // Navigate to Profile
+        navigate("/profile");
+        // --- API CALL END ---
+
+      } catch (error) {
+        console.error("Login failed:", error);
+        // Show error message from backend or a default message
+        setApiError(error.response?.data?.message || "Login failed. Please check your credentials.");
+      } finally {
         setIsSubmitting(false);
-      }, 1500);
+      }
     }
   };
 
@@ -174,26 +200,6 @@ const UserLogin = () => {
             <Sparkles className="w-5 h-5 text-[#D9F99D]" />
           </motion.div>
         ))}
-
-        {/* Gradient Orbs */}
-        <motion.div
-          className="absolute top-1/4 right-1/4 w-72 h-72 bg-[#D9F99D] rounded-full blur-3xl opacity-20"
-          animate={{
-            scale: [1, 1.3, 1],
-            x: [0, 30, 0],
-            y: [0, -30, 0]
-          }}
-          transition={{ duration: 6, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-black rounded-full blur-3xl opacity-10"
-          animate={{
-            scale: [1, 1.2, 1],
-            x: [0, -20, 0],
-            y: [0, 20, 0]
-          }}
-          transition={{ duration: 5, repeat: Infinity }}
-        />
       </div>
 
       {/* Main Content */}
@@ -228,6 +234,19 @@ const UserLogin = () => {
             transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
           >
             <form onSubmit={handleSubmit} className="space-y-6">
+              
+              {/* API Error Message Display */}
+              {apiError && (
+                <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-red-50 text-red-600 p-3 rounded-xl text-sm font-medium flex items-center gap-2 border border-red-200"
+                >
+                    <AlertCircle className="w-4 h-4" />
+                    {apiError}
+                </motion.div>
+              )}
+
               {/* Email Field */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">
@@ -338,7 +357,7 @@ const UserLogin = () => {
               <p className="text-gray-600 font-medium">
                 New to EventsHUB?{' '}
                 <Link
-                  to="/user-signup"
+                  to="/signup"
                   data-testid="user-login-signup-link"
                   className="text-black font-bold hover:text-gray-600 transition-colors"
                 >
