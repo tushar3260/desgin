@@ -14,14 +14,14 @@ const Nav = () => {
     <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl bg-white/70 backdrop-blur-xl border border-white/20 p-2 rounded-2xl flex justify-between items-center z-50 shadow-[0_8px_32px_rgba(0,0,0,0.05)]">
       
       {/* --- LOGO SECTION --- */}
-      <div className="flex items-center gap-2 px-4 group cursor-pointer">
+      <a href="/" className="flex items-center gap-2 px-4 group cursor-pointer">
         <div className="w-9 h-9 bg-black rounded-xl flex items-center justify-center group-hover:bg-[#D9F99D] transition-colors duration-300">
           <Zap className="text-[#D9F99D] group-hover:text-black w-5 h-5 fill-current transition-colors" />
         </div>
-        <span className="font-black text-xl tracking-tighter uppercase italic">
+        <span className="font-black text-xl tracking-tighter uppercase italic text-black">
           EventHub
         </span>
-      </div>
+      </a>
 
       {/* --- DESKTOP NAVIGATION --- */}
       <div className="hidden md:flex gap-1 bg-gray-100/50 p-1 rounded-xl">
@@ -43,15 +43,19 @@ const Nav = () => {
         </a>
       </div>
 
-      {/* --- RIGHT ACTIONS (LOGIN / MOBILE TOGGLE) --- */}
+      {/* --- RIGHT ACTIONS --- */}
       <div className="flex items-center gap-2 px-2">
-        <button className="hidden sm:block bg-black text-white px-8 py-2.5 rounded-xl text-sm font-bold hover:bg-[#D9F99D] hover:text-black transition-all active:scale-95">
+        {/* DESKTOP LOGIN BUTTON - Redirects to /user-login */}
+        <a 
+          href="/user-login" 
+          className="hidden sm:block bg-black text-white px-8 py-2.5 rounded-xl text-sm font-bold hover:bg-[#D9F99D] hover:text-black transition-all active:scale-95 text-center shadow-lg"
+        >
           Log In
-        </button>
+        </a>
 
         {/* Mobile Menu Toggle */}
         <button 
-          className="md:hidden p-2 bg-gray-100 rounded-xl"
+          className="md:hidden p-2 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -65,18 +69,28 @@ const Nav = () => {
             <a 
               key={item.name} 
               href={item.href} 
-              className="text-lg font-black uppercase italic border-b border-gray-50 pb-2"
+              className="text-lg font-black uppercase italic border-b border-gray-50 pb-2 text-gray-700 hover:text-black"
               onClick={() => setIsOpen(false)}
             >
               {item.name}
             </a>
           ))}
-          <a href="/post-event" className="text-lg font-black uppercase italic text-blue-600">
+          <a 
+            href="/post-event" 
+            className="text-lg font-black uppercase italic text-blue-600"
+            onClick={() => setIsOpen(false)}
+          >
             Post Event
           </a>
-          <button className="w-full bg-black text-white py-4 rounded-2xl font-black uppercase tracking-widest">
+          
+          {/* MOBILE LOGIN BUTTON - Updated to /user-login */}
+          <a 
+            href="/user-login" 
+            className="w-full bg-black text-white py-4 rounded-2xl font-black uppercase tracking-widest text-center active:bg-[#D9F99D] active:text-black transition-all"
+            onClick={() => setIsOpen(false)}
+          >
             Log In
-          </button>
+          </a>
         </div>
       )}
     </nav>
