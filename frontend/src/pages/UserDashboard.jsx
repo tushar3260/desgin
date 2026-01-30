@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Navigate, useNavigate} from 'react-router-dom';
 import { 
   Zap, Bell, Settings, LogOut, LayoutDashboard, Award, Users, 
   MessageSquare, Calendar, MapPin, Flame, QrCode, 
@@ -6,6 +7,7 @@ import {
 } from 'lucide-react';
 
 const UserDashboard = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Overview');
   const [ledgerFilter, setLedgerFilter] = useState('All'); // Filter State
 
@@ -33,7 +35,12 @@ const UserDashboard = () => {
           <div className="w-8 h-8 bg-[#D9F99D] rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform">
             <Zap className="text-black w-5 h-5 fill-current" />
           </div>
-          <span className="font-bold text-xl tracking-tighter uppercase italic">HackSprint</span>
+          <button onClick={() => navigate("/")}
+  type="button"
+  className="font-bold text-xl tracking-tighter uppercase italic bg-transparent border-none cursor-pointer"
+>
+  EventHub
+</button>
         </div>
 
         <nav className="flex-1 space-y-1">
