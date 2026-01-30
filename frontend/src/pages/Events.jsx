@@ -13,10 +13,10 @@ const EventsPage = () => {
 
   // Data (Including your 16 events)
   const allEvents = [
-    { id: 1, title: "Euphoria '26", category: "Cultural", date: "MAR 15", location: "Main Stage", price: "Free", img: "https://images.unsplash.com/photo-1514525253361-bee8a197c0c5?q=80&w=2070" },
+    { id: 1, title: "Euphoria '26", category: "Cultural", date: "MAR 15", location: "Main Stage", price: "Free", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29uY2VydHxlbnwwfHwwfHx8MA%3D%3D" },
     { id: 2, title: "HackSprint", category: "Technical", date: "FEB 10", location: "Lab A-12", price: "Entry Fee", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070" },
     { id: 3, title: "Design Jam", category: "Workshops", date: "FEB 12", location: "Studio 4", price: "Free", img: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=2070" },
-    { id: 4, title: "Robo-War", category: "Technical", date: "FEB 20", location: "OAT", price: "Free", img: "https://images.unsplash.com/photo-1531746790731-6c087fecd05a?q=80&w=2070" },
+    { id: 4, title: "Robo-War", category: "Technical", date: "FEB 20", location: "OAT", price: "Free", img: "https://media.istockphoto.com/id/1370462893/photo/alien-robots-in-a-distant-world.webp?a=1&b=1&s=612x612&w=0&k=20&c=t0LGI4ynafoosStvIUDkgndaFo9a_CCbuL2sIgwMwIQ=" },
     { id: 5, title: "Battle of Bands", category: "Cultural", date: "MAR 02", location: "Amphitheater", price: "Entry Fee", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2070" },
     { id: 6, title: "Guest Lecture", category: "Seminars", date: "FEB 05", location: "Hall 1", price: "Free", img: "https://images.unsplash.com/photo-1475721027187-4024733923f9?q=80&w=2070" },
     { id: 7, title: "Project Expo", category: "Technical", date: "FEB 28", location: "Main Library Hall", price: "Free", img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070" },

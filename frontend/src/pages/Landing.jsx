@@ -1,6 +1,7 @@
 import React from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowUpRight,
   Code,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 
 const Landing = () => {
+      const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[#F8F8F5] text-[#1A1A1A] font-sans selection:bg-[#D9F99D] selection:text-black">
     <Nav />
@@ -55,7 +57,8 @@ const Landing = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-0 w-full justify-center lg:justify-start items-center">
-              <button className="group relative px-10 py-5 bg-[#D9F99D] text-black text-xl font-black transition-all hover:translate-x-[-4px] hover:translate-y-[-4px] active:translate-x-0 active:translate-y-0 flex items-center gap-3 shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+              <button onClick={() => navigate('/events')}
+            className="group relative px-10 py-5 bg-[#D9F99D] text-black text-xl font-black transition-all hover:translate-x-[-4px] hover:translate-y-[-4px] active:translate-x-0 active:translate-y-0 flex items-center gap-3 shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
                 EXPLORE EVENTS{" "}
                 <Globe className="w-6 h-6 group-hover:rotate-45 transition-transform duration-300" />
               </button>
@@ -194,12 +197,12 @@ const Landing = () => {
   <div className="relative group">
     <div className="flex gap-4 overflow-x-auto px-4 md:px-8 no-scrollbar cursor-grab active:cursor-grabbing pb-12">
       {[
-        { name: "Euphoria '26", tag: "Cultural", img: "https://images.unsplash.com/photo-1514525253361-bee8a197c0c5?q=80&w=2070", sub: "Annual Main Fest" },
+        { name: "Euphoria '26", tag: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29uY2VydHxlbnwwfHwwfHx8MA%3D%3D", sub: "Annual Main Fest" },
         { name: "Hack Sprint", tag: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070", sub: "36-Hour Hackathon" },
         { name: "Acoustic Night", tag: "Music Club", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2070", sub: "Live at Amphitheater" },
         { name: "Design Jam", tag: "Creative", img: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=2070", sub: "UI/UX Workshop" },
-        { name: "Mock UN", tag: "Debate", img: "https://images.unsplash.com/photo-1475721027187-4024733923f9?q=80&w=2070", sub: "Political Science Club" },
-        { name: "Robo-War", tag: "Robotics", img: "https://images.unsplash.com/photo-1531746790731-6c087fecd05a?q=80&w=2070", sub: "Lab A-12 Finals" },
+        { name: "Mock UN", tag: "Debate", img: "https://images.unsplash.com/photo-1766650552316-4585f62f0130?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHNvY2lhbCUyMGNsdWJ8ZW58MHx8MHx8fDA%3D", sub: "Political Science Club" },
+        { name: "Robo-War", tag: "Robotics", img: "https://media.istockphoto.com/id/1370462893/photo/alien-robots-in-a-distant-world.webp?a=1&b=1&s=612x612&w=0&k=20&c=t0LGI4ynafoosStvIUDkgndaFo9a_CCbuL2sIgwMwIQ=", sub: "Lab A-12 Finals" },
         { name: "Startup Pitch", tag: "Entrepreneur", img: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=2070", sub: "Incubation Center" }
       ].map((card, i) => (
         <div 

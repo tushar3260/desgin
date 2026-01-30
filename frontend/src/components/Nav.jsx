@@ -8,6 +8,7 @@ const Nav = () => {
     { name: "Home", href: "/" },
     { name: "Events", href: "/events" },
     { name: "Clubs", href: "/clubs" },
+    { name: "Dashboard", href: "/profile" },
   ];
 
   return (
