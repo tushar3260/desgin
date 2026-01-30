@@ -86,7 +86,7 @@ const Nav = () => {
           
           {/* MOBILE LOGIN BUTTON - Updated to /user-login */}
           <a 
-            href="/user-login" 
+            href="/login" 
             className="w-full bg-black text-white py-4 rounded-2xl font-black uppercase tracking-widest text-center active:bg-[#D9F99D] active:text-black transition-all"
             onClick={() => setIsOpen(false)}
           >

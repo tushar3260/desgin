@@ -116,7 +116,7 @@ const UserSignup = () => {
       setShowSuccess(true);
 
       setTimeout(() => {
-        navigate("/user-login");
+        navigate("/login");
       }, 2000);
 
     } catch (error) {
@@ -425,7 +425,7 @@ const UserSignup = () => {
 
             <div className="mt-6 text-center">
               <p className="text-gray-600 font-medium">
-                Already have an account? <Link to="/user-login" className="text-black font-bold hover:text-gray-600">Login here</Link>
+                Already have an account? <Link to="/login" className="text-black font-bold hover:text-gray-600">Login here</Link>
               </p>
             </div>
 

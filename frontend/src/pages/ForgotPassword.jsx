@@ -226,7 +226,7 @@ const ForgotPasswordFlow = () => {
                 </div>
                 <h2 className="text-2xl font-black mb-2">Updated! 🎉</h2>
                 <p className="text-gray-600 mb-8 font-medium italic text-sm">Password change successful. You can now login with your new credentials.</p>
-                <Link to="/user-login" className="block w-full bg-black text-[#D9F99D] py-4 rounded-xl font-bold text-center">
+                <Link to="/login" className="block w-full bg-black text-[#D9F99D] py-4 rounded-xl font-bold text-center">
                   Go to Login
                 </Link>
               </motion.div>
@@ -235,7 +235,7 @@ const ForgotPasswordFlow = () => {
 
           {step < 4 && (
             <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-              <Link to="/user-login" className="inline-flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-black transition-colors">
+              <Link to="/login" className="inline-flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-black transition-colors">
                 <ArrowLeft size={16} /> Back to Login
               </Link>
             </div>
