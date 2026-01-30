@@ -357,7 +357,7 @@ const UserLogin = () => {
               <p className="text-gray-600 font-medium">
                 New to EventsHUB?{' '}
                 <Link
-                  to="/register"
+                  to="/signup"
                   data-testid="user-login-signup-link"
                   className="text-black font-bold hover:text-gray-600 transition-colors"
                 >
