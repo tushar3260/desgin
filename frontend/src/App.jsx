@@ -7,6 +7,8 @@ import Profile from "./pages/Profile";
 import Landing from "./pages/Landing";
 import Events from "./pages/Events";
 import Clubs from "./pages/Clubs";
+import UserDashboard from "./pages/UserDashboard";
+import EventAIChatbot from "./pages/EventAiChatbot";
 
 import ClubLogin from "./pages/ClubLogin";
 import ClubSignup from "./pages/ClubSignup";
@@ -27,7 +29,7 @@ function App() {
         
         <Route path="/login" element={<UserLogin />} />
         <Route path="/signup" element={<UserSignup />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<UserDashboard />} />
         <Route path="/forgot-password" element={<ForgotPasswordFlow />} />
         <Route path="/events" element={<Events />} />
         <Route path="/clubs" element={<Clubs />} />
@@ -37,6 +39,7 @@ function App() {
         <Route path="/club-signup" element={<ClubSignup />} />
         <Route path="/post-event" element={<PostEvent />} />
       </Routes>
+      <EventAIChatbot/>
     </BrowserRouter>
   );
 }

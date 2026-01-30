@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Calendar, MapPin, Tag, Image as ImageIcon, 
@@ -12,7 +12,17 @@ import api from '../api';
 const CreateEvent = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
+  // 1. Security Check: Page load hote hi check karein
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("Bhai, pehle login toh kar lo! Only Clubs can host events. 🛡️");
+      navigate('/club-login');
+    }
+  }, [navigate]);
+
+  // 2. State Management
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -23,7 +33,7 @@ const CreateEvent = () => {
     bannerImage: '',
     registrationStatus: 'Open',
     registrationLink: '',
-    organizerPhone: '', // Backend accept karta hai optional phone
+    organizerPhone: '', 
     rules: ['']
   });
 
@@ -32,7 +42,7 @@ const CreateEvent = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // --- Rules Logic ---
+  // 3. Dynamic Rules Logic
   const addRule = () => setFormData(prev => ({ ...prev, rules: [...prev.rules, ''] }));
   
   const handleRuleChange = (index, value) => {
@@ -42,11 +52,13 @@ const CreateEvent = () => {
   };
 
   const removeRule = (index) => {
-    const updatedRules = formData.rules.filter((_, i) => i !== index);
-    setFormData(prev => ({ ...prev, rules: updatedRules }));
+    if (formData.rules.length > 1) {
+      const updatedRules = formData.rules.filter((_, i) => i !== index);
+      setFormData(prev => ({ ...prev, rules: updatedRules }));
+    }
   };
 
-  // --- Submit to Backend ---
+  // 4. Submit to Backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -56,11 +68,11 @@ const CreateEvent = () => {
       
       if (response.data.success) {
         alert("Event Created Successfully! 🚀");
-        navigate('/all-events'); 
+        navigate('/all-events'); // Check karein aapki routing mein ye path hai ya sirf /events
       }
     } catch (error) {
       console.error("Submission Error:", error);
-      alert(error.response?.data?.message || "Something went wrong while creating event");
+      alert(error.response?.data?.message || "Registration failed. Try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -93,14 +105,14 @@ const CreateEvent = () => {
             {/* Section 1: Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="md:col-span-2">
-                <label className="block mb-1.5">Event Title *</label>
+                <label className="block mb-1.5 text-black">Event Title *</label>
                 <input required name="title" value={formData.title} onChange={handleChange}
                   placeholder="CODE-A-THON 2026"
                   className="w-full border-2 border-black p-2.5 focus:bg-[#D9F99D]/5 outline-none transition-all text-black font-medium" />
               </div>
 
               <div>
-                <label className="block mb-1.5">Category</label>
+                <label className="block mb-1.5 text-black">Category</label>
                 <div className="relative">
                   <Tag className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={14} />
                   <select name="category" value={formData.category} onChange={handleChange}
@@ -113,7 +125,7 @@ const CreateEvent = () => {
               </div>
 
               <div>
-                <label className="block mb-1.5">Status</label>
+                <label className="block mb-1.5 text-black">Status</label>
                 <select name="registrationStatus" value={formData.registrationStatus} onChange={handleChange}
                   className="w-full border-2 border-black p-2.5 focus:bg-[#D9F99D]/5 outline-none bg-white text-black">
                   {['Open', 'Closed', 'Coming Soon'].map(status => (
@@ -126,22 +138,22 @@ const CreateEvent = () => {
             {/* Section 2: Dates & Location */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block mb-1.5">Start Date *</label>
+                <label className="block mb-1.5 text-black">Start Date *</label>
                 <input type="datetime-local" required name="startDate" value={formData.startDate} onChange={handleChange}
                   className="w-full border-2 border-black p-2.5 focus:bg-[#D9F99D]/5 outline-none text-black" />
               </div>
               <div>
-                <label className="block mb-1.5">End Date *</label>
+                <label className="block mb-1.5 text-black">End Date *</label>
                 <input type="datetime-local" required name="endDate" value={formData.endDate} onChange={handleChange}
                   className="w-full border-2 border-black p-2.5 focus:bg-[#D9F99D]/5 outline-none text-black" />
               </div>
               <div>
-                <label className="block mb-1.5">Location *</label>
+                <label className="block mb-1.5 text-black">Location *</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={14} />
                   <input required name="location" value={formData.location} onChange={handleChange}
                     placeholder="MAIN AUDITORIUM"
-                    className="w-full border-2 border-black p-2.5 pl-9 focus:bg-[#D9F99D]/5 outline-none text-black" />
+                    className="w-full border-2 border-black p-2.5 pl-9 focus:bg-[#D9F99D]/5 outline-none text-black font-medium" />
                 </div>
               </div>
             </div>
@@ -152,36 +164,36 @@ const CreateEvent = () => {
                 <User size={16}/> CONTACT INFO
               </h3>
               <div>
-                <label className="block mb-1.5">Organizer Phone (Optional)</label>
+                <label className="block mb-1.5 text-black">Organizer Phone (Optional)</label>
                 <input name="organizerPhone" value={formData.organizerPhone} onChange={handleChange}
                   placeholder="+91 9876543210"
-                  className="w-full border-2 border-black p-2.5 focus:bg-[#D9F99D]/5 outline-none text-black" />
+                  className="w-full border-2 border-black p-2.5 focus:bg-[#D9F99D]/5 outline-none text-black font-medium" />
               </div>
             </div>
 
             {/* Section 4: URLs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block mb-1.5">Banner Image URL</label>
+                <label className="block mb-1.5 text-black">Banner Image URL</label>
                 <div className="relative">
                   <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={14} />
                   <input name="bannerImage" value={formData.bannerImage} onChange={handleChange} placeholder="HTTPS://IMAGE.PNG"
-                    className="w-full border-2 border-black p-2.5 pl-9 outline-none text-black" />
+                    className="w-full border-2 border-black p-2.5 pl-9 outline-none text-black font-medium" />
                 </div>
               </div>
               <div>
-                <label className="block mb-1.5">Registration Link</label>
+                <label className="block mb-1.5 text-black">Registration Link</label>
                 <div className="relative">
                   <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={14} />
                   <input name="registrationLink" value={formData.registrationLink} onChange={handleChange} placeholder="GOOGLE FORM LINK"
-                    className="w-full border-2 border-black p-2.5 pl-9 outline-none text-black" />
+                    className="w-full border-2 border-black p-2.5 pl-9 outline-none text-black font-medium" />
                 </div>
               </div>
             </div>
 
             {/* Section 5: Description */}
             <div>
-              <label className="block mb-1.5">Event Description *</label>
+              <label className="block mb-1.5 text-black">Event Description *</label>
               <textarea required name="description" value={formData.description} onChange={handleChange} rows="3"
                 placeholder="DESCRIBE THE EVENT DETAILS..."
                 className="w-full border-2 border-black p-2.5 focus:bg-[#D9F99D]/5 outline-none text-black font-medium" />
@@ -190,16 +202,18 @@ const CreateEvent = () => {
             {/* Section 6: Rules */}
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label>Event Rules</label>
-                <button type="button" onClick={addRule} className="text-[9px] underline text-black decoration-[#D9F99D] decoration-2">+ NEW RULE</button>
+                <label className="text-black">Event Rules</label>
+                <button type="button" onClick={addRule} className="text-[9px] underline text-black font-black decoration-[#D9F99D] decoration-2">+ NEW RULE</button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {formData.rules.map((rule, index) => (
                   <div key={index} className="flex gap-2">
                     <input value={rule} onChange={(e) => handleRuleChange(index, e.target.value)}
                       placeholder={`RULE #${index + 1}`}
-                      className="flex-1 border border-black p-2 outline-none text-black text-[10px]" />
-                    <button type="button" onClick={() => removeRule(index)} className="text-red-500"><X size={16}/></button>
+                      className="flex-1 border-2 border-black p-2 outline-none text-black text-[10px] font-medium" />
+                    {formData.rules.length > 1 && (
+                      <button type="button" onClick={() => removeRule(index)} className="text-red-500 hover:bg-red-50 p-1"><X size={16}/></button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -208,7 +222,7 @@ const CreateEvent = () => {
             {/* Submit Button */}
             <div className="pt-4">
               <button type="submit" disabled={isSubmitting}
-                className="w-full bg-black text-[#D9F99D] py-4 border-b-4 border-r-4 border-gray-700 font-black text-lg hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all active:scale-[0.98] flex items-center justify-center gap-3">
+                className="w-full bg-black text-[#D9F99D] py-4 border-b-4 border-r-4 border-gray-700 font-black text-lg hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50">
                 {isSubmitting ? (
                    <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
                       <Zap size={20} />
