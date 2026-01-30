@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Calendar, MapPin, Tag, Image as ImageIcon, 
-  Link as LinkIcon, Phone, Mail, User, Plus, X, Rocket, ArrowRight, Trash2 
+  Link as LinkIcon, Plus, X, Rocket, ArrowRight, Zap
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import api from '../api'; // Aapka axios instance path
 
 const CreateEvent = () => {
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -13,40 +18,16 @@ const CreateEvent = () => {
     startDate: '',
     endDate: '',
     location: '',
-    // Organizer ab ek array hai multiple members ke liye
-    organizers: [{ name: '', email: '', phone: '' }],
     bannerImage: '',
     registrationStatus: 'Open',
     registrationLink: '',
+    organizerPhone: '', // Backend extra phone accept karta hai
     rules: ['']
   });
 
-  // Handle simple inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  // --- Logic for Multiple Organizers ---
-  const addOrganizer = () => {
-    setFormData(prev => ({
-      ...prev,
-      organizers: [...prev.organizers, { name: '', email: '', phone: '' }]
-    }));
-  };
-
-  const handleOrganizerChange = (index, e) => {
-    const { name, value } = e.target;
-    const updatedOrganizers = [...formData.organizers];
-    updatedOrganizers[index][name] = value;
-    setFormData(prev => ({ ...prev, organizers: updatedOrganizers }));
-  };
-
-  const removeOrganizer = (index) => {
-    if (formData.organizers.length > 1) {
-      const updatedOrganizers = formData.organizers.filter((_, i) => i !== index);
-      setFormData(prev => ({ ...prev, organizers: updatedOrganizers }));
-    }
   };
 
   // --- Logic for Dynamic Rules ---
@@ -63,10 +44,25 @@ const CreateEvent = () => {
     setFormData(prev => ({ ...prev, rules: updatedRules }));
   };
 
-  const handleSubmit = (e) => {
+  // --- Submit to Backend ---
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Final Data for Backend:", formData);
-    alert("Event Registered Successfully! 🚀");
+    setIsSubmitting(true);
+
+    try {
+      // Backend expects rules as an array of strings, hum wahi bhej rahe hain
+      const response = await api.post('/events/create', formData);
+      
+      if (response.data.success) {
+        alert("Event Created Successfully! 🚀");
+        navigate('/all-events'); // Redirect to events list
+      }
+    } catch (error) {
+      console.error("Submission Error:", error);
+      alert(error.response?.data?.message || "Something went wrong while creating event");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -82,7 +78,7 @@ const CreateEvent = () => {
             <h1 className="text-[#D9F99D] text-3xl font-black italic tracking-tighter flex items-center gap-2">
               <Rocket className="fill-current" /> HOST AN EVENT
             </h1>
-            <p className="text-gray-400 font-medium">Launch your event and manage your team on EventsHUB</p>
+            <p className="text-gray-400 font-medium">Launch your event on EventsHUB</p>
           </div>
           <div className="bg-[#D9F99D] px-4 py-2 rounded-full font-black text-xs uppercase tracking-widest border-2 border-white shadow-sm">
             Club Organizer
@@ -114,13 +110,10 @@ const CreateEvent = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-black mb-2 uppercase">Registration Status</label>
-              <select name="registrationStatus" value={formData.registrationStatus} onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-black outline-none bg-white font-medium">
-                {['Open', 'Closed', 'Coming Soon'].map(status => (
-                  <option key={status} value={status}>{status}</option>
-                ))}
-              </select>
+              <label className="block text-sm font-black mb-2 uppercase tracking-wide">Contact Phone (Optional)</label>
+              <input name="organizerPhone" value={formData.organizerPhone} onChange={handleChange}
+                placeholder="e.g. +91 9876543210"
+                className="w-full border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-black outline-none font-medium" />
             </div>
           </div>
 
@@ -147,40 +140,7 @@ const CreateEvent = () => {
             </div>
           </div>
 
-          {/* Section 3: Organizer Team (Multiple Members) */}
-          <div className="bg-gray-50 p-6 rounded-2xl border-2 border-dashed border-gray-200">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-black flex items-center gap-2 underline underline-offset-4 decoration-[#D9F99D]">
-                <User size={20}/> Organizer Team Contact
-              </h3>
-              <button type="button" onClick={addOrganizer}
-                className="text-xs bg-black text-white px-4 py-2 rounded-full flex items-center gap-2 hover:bg-[#D9F99D] hover:text-black transition-all font-bold">
-                <Plus size={16}/> Add Member
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              {formData.organizers.map((member, index) => (
-                <div key={index} className="relative grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-white border-2 border-gray-100 rounded-xl">
-                  <input name="name" placeholder="Name" value={member.name} onChange={(e) => handleOrganizerChange(index, e)}
-                    className="border-2 border-gray-50 rounded-lg p-3 outline-none focus:border-black transition-all" />
-                  <input name="email" type="email" placeholder="Email" value={member.email} onChange={(e) => handleOrganizerChange(index, e)}
-                    className="border-2 border-gray-50 rounded-lg p-3 outline-none focus:border-black transition-all" />
-                  <div className="flex gap-2">
-                    <input name="phone" placeholder="Phone" value={member.phone} onChange={(e) => handleOrganizerChange(index, e)}
-                      className="flex-1 border-2 border-gray-50 rounded-lg p-3 outline-none focus:border-black transition-all" />
-                    {formData.organizers.length > 1 && (
-                      <button type="button" onClick={() => removeOrganizer(index)} className="text-red-400 hover:text-red-600 transition-colors">
-                        <Trash2 size={20}/>
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Section 4: Description & Links */}
+          {/* Section 3: Description & Links */}
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-black mb-2 uppercase">Description *</label>
@@ -209,7 +169,7 @@ const CreateEvent = () => {
             </div>
           </div>
 
-          {/* Section 5: Rules */}
+          {/* Section 4: Rules */}
           <div>
             <label className="block text-sm font-black mb-2 uppercase tracking-widest flex justify-between items-center">
               Event Rules
@@ -233,9 +193,15 @@ const CreateEvent = () => {
 
           {/* Submit Button */}
           <div className="pt-6">
-            <button type="submit" 
-              className="w-full bg-black text-[#D9F99D] py-5 rounded-2xl font-black text-xl flex items-center justify-center gap-3 hover:shadow-[0px_10px_20px_-10px_rgba(0,0,0,0.5)] transition-all active:scale-95 border-b-4 border-gray-800">
-              PUBLISH EVENT NOW <ArrowRight />
+            <button type="submit" disabled={isSubmitting}
+              className="w-full bg-black text-[#D9F99D] py-5 rounded-2xl font-black text-xl flex items-center justify-center gap-3 hover:shadow-[0px_10px_20px_-10px_rgba(0,0,0,0.5)] transition-all active:scale-95 border-b-4 border-gray-800 disabled:opacity-50">
+              {isSubmitting ? (
+                 <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
+                    <Zap className="w-6 h-6" />
+                 </motion.div>
+              ) : (
+                <>PUBLISH EVENT NOW <ArrowRight /></>
+              )}
             </button>
           </div>
         </form>
